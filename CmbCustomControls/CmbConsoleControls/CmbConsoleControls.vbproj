@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>CmbConsoleControls</RootNamespace>
+    <TargetFramework>net6.0</TargetFramework>
+    <OptionStrict>On</OptionStrict>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Maurice</Authors>
+    <Company>CMBSolutions</Company>
+    <Description>Custom controls for console output</Description>
+    <Copyright>CMBSolutions 2022</Copyright>
+    <PackageProjectUrl>https://cmbsolutions.github.io/CmbCustomControls/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/cmbsolutions/CmbCustomControls</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn />
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn />
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

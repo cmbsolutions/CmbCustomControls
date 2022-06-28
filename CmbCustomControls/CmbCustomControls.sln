@@ -5,7 +5,11 @@ VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "CmbCustomControls", "CmbCustomControls\CmbCustomControls.vbproj", "{342CCB2D-CA3F-49E7-BEFF-A30FDA5FD883}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Showcase", "Showcase\Showcase.vbproj", "{CDEBAC6A-123F-4DAA-B836-308EE0A6C01F}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Showcase", "Showcase\Showcase.vbproj", "{CDEBAC6A-123F-4DAA-B836-308EE0A6C01F}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ConsoleShowcase", "ConsoleShowcase\ConsoleShowcase.vbproj", "{FD189D3B-342B-4F58-BC54-4770A6B321B1}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "CmbConsoleControls", "CmbConsoleControls\CmbConsoleControls.vbproj", "{C7025632-DB84-4BC8-9D54-66406F1D3B4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{CDEBAC6A-123F-4DAA-B836-308EE0A6C01F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDEBAC6A-123F-4DAA-B836-308EE0A6C01F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDEBAC6A-123F-4DAA-B836-308EE0A6C01F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD189D3B-342B-4F58-BC54-4770A6B321B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD189D3B-342B-4F58-BC54-4770A6B321B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD189D3B-342B-4F58-BC54-4770A6B321B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD189D3B-342B-4F58-BC54-4770A6B321B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7025632-DB84-4BC8-9D54-66406F1D3B4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7025632-DB84-4BC8-9D54-66406F1D3B4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7025632-DB84-4BC8-9D54-66406F1D3B4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7025632-DB84-4BC8-9D54-66406F1D3B4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
