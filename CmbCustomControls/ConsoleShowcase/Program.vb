@@ -1,24 +1,55 @@
 Imports System
+Imports System.Threading
 
 Module Program
     Sub Main(args As String())
-        Using pb As New CmbConsoleControls.CmbMultiBar
-            Dim alltasks(3) As Task
-            For y As Integer = 0 To 3
-                Dim pbx = pb.Add($"Progressbar {y}", True, True)
-                Dim sleeptime As Integer = Random.Shared.Next(50, 500)
-                alltasks(y) = Task.Run(Sub()
-
-                                           Threading.Thread.Sleep(100)
-                                           Dim localSleeptime = sleeptime
-                                           For i As Integer = 0 To 100
-                                               pb.Report(i, pbx)
-                                               Threading.Thread.Sleep(localSleeptime)
-                                           Next
-                                       End Sub)
+        Console.WriteLine("A single progressbar without color...")
+        Using p As New CmbConsoleControls.CmbProgressBar("Some process that is running")
+            p.ColoredOutput = False
+            For i As Integer = 0 To 100
+                p.Report(i)
+                Threading.Thread.Sleep(10)
             Next
+        End Using
+        Console.WriteLine()
+        Console.WriteLine("A bunch of progressbars with color...")
+        Console.WriteLine("Press C to cancel")
 
-            Task.WaitAll(alltasks)
+        Using pb As New CmbConsoleControls.CmbMultiBar
+            Using cts As New CancellationTokenSource()
+                Using cts2 As New CancellationTokenSource
+                    Dim token As CancellationToken = cts.Token
+                    Dim token2 As CancellationToken = cts2.Token
+
+                    Dim alltasks(3) As Task
+                    For y As Integer = 0 To alltasks.Length - 1
+                        Dim pbx = pb.Add($"Progressbar {y}", True, True)
+                        Dim sleeptime As Integer = Random.Shared.Next(10, 50)
+                        alltasks(y) = Task.Run(Sub()
+                                                   Dim localSleeptime = sleeptime
+                                                   Threading.Thread.Sleep(100)
+                                                   For i As Integer = 0 To 100
+                                                       If token.IsCancellationRequested Then Exit Sub
+                                                       pb.Report(i, pbx)
+                                                       Threading.Thread.Sleep(localSleeptime)
+                                                   Next
+                                               End Sub, token)
+                    Next
+
+                    Task.Run(Sub()
+                                 Do
+                                     While Not Console.KeyAvailable
+                                         If token2.IsCancellationRequested Then Exit Sub
+                                         Thread.Sleep(250)
+                                     End While
+                                 Loop While Console.ReadKey(True).KeyChar.ToString.ToUpperInvariant <> "C"
+                                 cts.Cancel()
+                             End Sub, token2)
+
+                    Task.WaitAll(alltasks)
+                    cts2.Cancel()
+                End Using
+            End Using
         End Using
     End Sub
 End Module

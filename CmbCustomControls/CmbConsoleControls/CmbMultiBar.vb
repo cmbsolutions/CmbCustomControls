@@ -5,15 +5,16 @@
     Private disposedValue As Boolean
     Public Shared Property OutputClaim As New Object
 
-    Public Function Add(Title As String, ShowTitle As Boolean, ShowPercentage As Boolean) As Integer
-        Dim fixedRow As Integer = 0
+    Public Function Add(Title As String, UseColor As Boolean, ShowPercentage As Boolean) As Integer
+        Dim fixedRow As Integer = Console.CursorTop
         If ProgressBars.Count > 0 Then
             fixedRow = ProgressBars.Last.Value.CurrentRow + 1
         End If
 
         Dim pb As New CmbProgressBar(fixedRow) With {
-            .ShowTitle = ShowTitle,
+            .ShowTitle = Title.Length > 0,
             .ShowPercentage = ShowPercentage,
+            .ColoredOutput = UseColor,
             .Title = Title
         }
 

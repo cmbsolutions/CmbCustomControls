@@ -1,4 +1,5 @@
 ﻿Imports System.Text
+Imports System.Text.RegularExpressions
 Imports System.Threading
 Public Class CmbProgressBar
     Implements IDisposable
@@ -6,12 +7,15 @@ Public Class CmbProgressBar
 
 #Region "Properties"
     Private MaxLength As Integer
+    Private Const MinLength As Integer = 30
+
     Public ReadOnly Property CurrentRow As Integer
 
     Private CurrentProgress As Integer
     Private internalBuilder As StringBuilder
     Private workingTitle As String
 
+    Public Property ColoredOutput As Boolean = True
     Public Property ShowPercentage As Boolean = True
     Public Property ShowTitle As Boolean = True
     Private _Title As String
@@ -34,7 +38,7 @@ Public Class CmbProgressBar
 #Region "Init class"
     Sub New()
         internalBuilder = New StringBuilder
-        MaxLength = Math.Min(60, Console.WindowWidth)
+        MaxLength = Math.Min(70, Math.Max(MinLength, Console.WindowWidth))
         _CurrentRow = Console.CursorTop
     End Sub
     Sub New(Title As String)
@@ -53,37 +57,66 @@ Public Class CmbProgressBar
 #End Region
 
     Private Sub Build()
-        'SyncLock internalBuilder
         internalBuilder.Clear()
+        Dim ignoreLength As Integer = 0
 
         If ShowTitle Then
-            internalBuilder.Append($"{workingTitle,20} [")
+            internalBuilder.Append($"{If(ColoredOutput, "<green>", "")}{workingTitle,-20} {If(ColoredOutput, "<yellow>", "")}[")
+            If ColoredOutput Then ignoreLength = 15
         Else
-            internalBuilder.Append("["c)
+            internalBuilder.Append($"{If(ColoredOutput, "<yellow>", "")}[")
+            If ColoredOutput Then ignoreLength = 8
         End If
 
-        Dim MaxCols As Integer = MaxLength - internalBuilder.Length - 6
+        Dim MaxCols As Integer = (MaxLength + ignoreLength) - internalBuilder.Length - 6
         Dim ColsFilled As Integer = Convert.ToInt32(Math.Min(((MaxCols / 100) * CurrentProgress), 100))
         Dim Spaces As Integer = MaxCols - ColsFilled
 
         internalBuilder.Append($"{New String("#"c, ColsFilled)}{New String(" "c, Spaces)}] ")
 
         If ShowPercentage Then
-            internalBuilder.Append($"{CurrentProgress,3}%")
+            internalBuilder.Append($"{If(ColoredOutput, "<cyan>", "")}{CurrentProgress,3}%{If(ColoredOutput, "<reset>", "")}")
         End If
 
         Dim morespaces As Integer = Math.Max(0, Console.WindowWidth - internalBuilder.Length)
 
         internalBuilder.Append($"{New String(" "c, morespaces)}")
-
-        'End SyncLock
     End Sub
 
     Private Sub WriteOutput()
-        SyncLock CmbMultiBar.OutputClaim
-            Console.SetCursorPosition(0, CurrentRow)
-            Console.Write(internalBuilder.ToString)
-        End SyncLock
+        If ColoredOutput Then
+            Dim RegexObj As New Regex("<(dark|)(red|green|blue|black|yellow|cyan|white|grey|magenta|reset)>([^<]+)", RegexOptions.IgnoreCase)
+            Dim color As ConsoleColor
+            SyncLock CmbMultiBar.OutputClaim
+                Console.SetCursorPosition(0, CurrentRow)
+                Dim MatchResults As Match = RegexObj.Match(internalBuilder.ToString)
+                While MatchResults.Success
+                    Dim i As Integer
+                    For i = 1 To MatchResults.Groups.Count
+                        Dim GroupObj As Group = MatchResults.Groups(i)
+                        If GroupObj.Success Then
+                            If GroupObj.Value = "reset" Then
+                                Console.ResetColor()
+                                Continue For
+                            End If
+
+                            If [Enum].TryParse(Of ConsoleColor)(GroupObj.Value, True, color) Then
+                                Console.ForegroundColor = color
+                                Continue For
+                            End If
+
+                            Console.Write(GroupObj.Value)
+                        End If
+                    Next
+                    MatchResults = MatchResults.NextMatch()
+                End While
+            End SyncLock
+        Else
+            SyncLock CmbMultiBar.OutputClaim
+                Console.SetCursorPosition(0, CurrentRow)
+                Console.Write(internalBuilder.ToString)
+            End SyncLock
+        End If
     End Sub
 
     Public Sub Report(value As Integer) Implements IProgress(Of Integer).Report
