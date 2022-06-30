@@ -18,9 +18,9 @@
             .Title = Title
         }
 
-        ProgressBars.Add(New KeyValuePair(Of Integer, CmbProgressBar)(ProgressBars.Count + 1, pb))
+        ProgressBars.Add(New KeyValuePair(Of Integer, CmbProgressBar)(ProgressBars.Count, pb))
 
-        Return ProgressBars.Count
+        Return ProgressBars.Count - 1
     End Function
 
     Public ReadOnly Property MaxRow As Integer
