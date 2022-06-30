@@ -20,17 +20,17 @@ Module Program
                 Using cts2 As New CancellationTokenSource
                     Dim token As CancellationToken = cts.Token
                     Dim token2 As CancellationToken = cts2.Token
-
                     Dim alltasks(3) As Task
                     For y As Integer = 0 To alltasks.Length - 1
                         Dim pbx = pb.Add($"Progressbar {y}", True, True)
                         Dim sleeptime As Integer = Random.Shared.Next(10, 50)
                         alltasks(y) = Task.Run(Sub()
+                                                   Dim localpbx = pbx
                                                    Dim localSleeptime = sleeptime
                                                    Threading.Thread.Sleep(100)
                                                    For i As Integer = 0 To 100
                                                        If token.IsCancellationRequested Then Exit Sub
-                                                       pb.Report(i, pbx)
+                                                       pb.Report(i, localpbx)
                                                        Threading.Thread.Sleep(localSleeptime)
                                                    Next
                                                End Sub, token)
@@ -48,6 +48,8 @@ Module Program
 
                     Task.WaitAll(alltasks)
                     cts2.Cancel()
+
+                    Console.SetCursorPosition(0, pb.MaxRow + 2)
                 End Using
             End Using
         End Using

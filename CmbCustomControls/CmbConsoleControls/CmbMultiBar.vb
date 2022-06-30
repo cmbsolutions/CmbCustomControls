@@ -23,6 +23,12 @@
         Return ProgressBars.Count
     End Function
 
+    Public ReadOnly Property MaxRow As Integer
+        Get
+            Return ProgressBars.Max(Function(c) c.Value.CurrentRow)
+        End Get
+    End Property
+
     Public Sub Report(value As Integer, key As Integer)
         Dim pb = ProgressBars.FirstOrDefault(Function(c) c.Key = key).Value
 
